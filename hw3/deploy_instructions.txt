@@ -3,7 +3,7 @@ prefect server start
 
 # check your profile
 prefect profile ls
-prefect profile use
+prefect profile use <profile_name>
 
 # deploy your flow from your project folder, and follow the instructions
 prefect deploy orchestrate.py:main_flow --name hw3
