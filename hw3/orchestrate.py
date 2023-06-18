@@ -130,7 +130,7 @@ def train_best_model(
     return rmse
 
 @flow
-def send_email(rmse, email_addresses):
+def send_email(rmse: float, email_addresses: List[str]):
     email_server_credentials = EmailServerCredentials.load("hw3-send-email")
     if email_addresses != []:
         for email_address in email_addresses:
