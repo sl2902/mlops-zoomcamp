@@ -1,3 +1,10 @@
+# start server
+prefect server start
+
+# check your profile
+prefect profile ls
+prefect profile use
+
 # deploy your flow from your project folder, and follow the instructions
 prefect deploy orchestrate.py:main_flow --name hw3
 
@@ -6,3 +13,9 @@ prefect worker start --pool 'hw3-orchestration' -t process
 
 # To schedule a run for this deployment, use the following command:
 prefect deployment run 'main-flow/hw3'
+
+# register custom email_send block
+prefect block register -m prefect_email
+
+# run custom email_send block on cli
+python blocks/email_credentials_block.py
