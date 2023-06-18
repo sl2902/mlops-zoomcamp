@@ -6,3 +6,5 @@ artifacts/
 output/
 hw2/mlruns/
 hw2/mlflow.db
+hw3/mlflow.db
+hw3/models/
