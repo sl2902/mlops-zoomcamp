@@ -1,0 +1,8 @@
+# deploy your flow from your project folder, and follow the instructions
+prefect deploy orchestrate.py:main_flow --name hw3
+
+# To execute flow runs from this deployment, start a worker in a separate terminal that pulls work from the 'hw3-orchestration' work pool
+prefect worker start --pool 'hw3-orchestration' -t process
+
+# To schedule a run for this deployment, use the following command:
+prefect deployment run 'main-flow/hw3'
