@@ -13,6 +13,10 @@ from prefect.artifacts import create_markdown_artifact
 from prefect_email import EmailServerCredentials, email_send_message
 from datetime import date
 from typing import List
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 @task(retries=3, retry_delay_seconds=2)
@@ -139,6 +143,13 @@ def send_email(rmse: float, email_addresses: List[str]):
                 subject="RMSE results",
                 msg=f"RMSE of the latest run is {rmse}",
                 email_to=email_address,
+            )
+    else:
+        subject = email_send_message.with_options(name=f"email {os.getenv('username')}").submit(
+                email_server_credentials=email_server_credentials,
+                subject="RMSE results",
+                msg=f"RMSE of the latest run is {rmse}",
+                email_to=os.getenv("username")
             )
 
 
