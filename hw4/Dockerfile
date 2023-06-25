@@ -12,5 +12,8 @@ RUN pipenv sync --system
 
 COPY [ "scripts/starter.py", "./" ]
 
-# ENTRYPOINT [ "python", "starter.py" ]
-ENTRYPOINT [ "bash" ]
+ENTRYPOINT [ "python", "starter.py" ]
+# ENTRYPOINT [ "bash" ]
+
+# pipenv run docker build -t hw4-q6-mean-duration-prediction:v1 .
+# pipenv run docker run -it hw4-q6-mean-duration-prediction:v1 --year 2022 --month 4
