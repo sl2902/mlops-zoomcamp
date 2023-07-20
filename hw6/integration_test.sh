@@ -4,10 +4,10 @@ docker-compose up -d
 
 sleep 5
 
-# export INPUT_FILE_PATTERN="s3://nyc-duration/in/{year:04d}-{month:02d}.parquet"
-# export OUTPUT_FILE_PATTERN="s3://nyc-duration/out/{year:04d}-{month:02d}.parquet"
-export INPUT_FILE_PATTERN="output/test.parquet"
-export OUTPUT_FILE_PATTERN="output/final_{year:04d}-{month:02d}.parquet"
+export INPUT_FILE_PATTERN="s3://nyc-duration/in/{year:04d}-{month:02d}.parquet"
+export OUTPUT_FILE_PATTERN="s3://nyc-duration/out/{year:04d}-{month:02d}.parquet"
+# export INPUT_FILE_PATTERN="output/test.parquet"
+# export OUTPUT_FILE_PATTERN="output/final_{year:04d}-{month:02d}.parquet"
 export S3_ENDPOINT_URL="http://localhost:4566"
 
 
