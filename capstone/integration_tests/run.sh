@@ -31,3 +31,36 @@ else
     docker-compose down -v
     docker-compose down --rmi=all
 fi
+
+print_info "Run prefect training workflow"
+docker exec -t test_prefect python train.py
+
+ERROR_CODE=$?
+
+if [[ $? -ne 0 ]]; then
+    docker-compose logs
+    docker-compose down
+    exit $?
+fi
+
+sleep 10
+
+print_info "Reload model"
+docker restart test_app
+
+sleep 5
+
+print_info "Test model serving"
+python test_predict.py
+
+ERROR_CODE=$?
+
+if [ ${ERROR_CODE} != 0 ]; then
+    docker-compose logs
+    docker-compose down
+    exit ${ERROR_CODE}
+fi
+
+print_info "Clean up"
+docker-compose down -v
+docker-compose down --rmi=all
