@@ -1,3 +1,12 @@
+[tool.pytest.ini_options]
+pythonpath = [
+  ".",
+]
+filterwarnings = [
+    "ignore::UserWarning",
+    "ignore::DeprecationWarning",
+]
+
 [tool.pylint.messages_control]
 disable = [
     "missing-function-docstring",
