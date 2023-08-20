@@ -45,8 +45,8 @@ services:
     command: server /data --console-address ":9001"
     environment:
       MINIO_SITE_REGION: ${AWS_DEFAULT_REGION}
-      MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID}
-      MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     expose:
       - "9000"
       - "9001"
