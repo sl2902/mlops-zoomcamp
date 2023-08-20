@@ -1,32 +1,28 @@
-import argparse
-import logging
 import os
 import sys
 import pickle
+import logging
+import argparse
 from pathlib import Path
-
-import pandas as pd
-
-# import numpy as np
-# import matplotlib.pyplot as plt
-from sklearn.model_selection import cross_val_score, StratifiedKFold
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_auc_score
 
 # from sklearn.preprocessing import OrdinalEncoder
 # from sklearn.feature_extraction import DictVectorizer
 import mlflow
-from mlflow.tracking import MlflowClient
-from mlflow.entities import ViewType
-from prefect import flow, task
-from prefect.task_runners import SequentialTaskRunner
-
 # from dotenv import load_dotenv
 import optuna
-from optuna.samplers import TPESampler
-
+import pandas as pd
 # import settings
 import preprocess_data
+from prefect import flow, task
+from mlflow.entities import ViewType
+from mlflow.tracking import MlflowClient
+from optuna.samplers import TPESampler
+from sklearn.metrics import roc_auc_score
+from prefect.task_runners import SequentialTaskRunner
+from sklearn.linear_model import LogisticRegression
+# import numpy as np
+# import matplotlib.pyplot as plt
+from sklearn.model_selection import StratifiedKFold, cross_val_score
 
 # load_dotenv(".env")
 

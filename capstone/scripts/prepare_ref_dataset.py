@@ -6,12 +6,13 @@ import logging
 import argparse
 
 import pandas as pd
+# import settings
+import preprocess_data
+from dotenv import load_dotenv
+
 # from sklearn.preprocessing import OrdinalEncoder
 # from sklearn.feature_extraction import DictVectorizer
 
-from dotenv import load_dotenv
-# import settings
-import preprocess_data
 
 
 load_dotenv()
