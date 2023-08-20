@@ -28,6 +28,7 @@ disable = [
     "unbalanced-tuple-unpacking",
     "inconsistent-return-statements",
     "wrong-import-position",
+    "duplicate-code",
 ]
 
 [tool.black]
