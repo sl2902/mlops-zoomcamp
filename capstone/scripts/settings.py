@@ -1,4 +1,4 @@
-from sklearn.preprocessing import OrdinalEncoder, StandardScaler
+from sklearn.preprocessing import OrdinalEncoder
 from sklearn.feature_extraction import DictVectorizer
 
 # store global constants and object instances used across the pipeline

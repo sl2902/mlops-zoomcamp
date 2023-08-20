@@ -1,17 +1,19 @@
-import pandas as pd
-import numpy as np
-import os, sys
-
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_auc_score, make_scorer
-from sklearn.preprocessing import OrdinalEncoder, StandardScaler
-from sklearn.feature_extraction import DictVectorizer
-from sklearn.ensemble import RandomForestClassifier
+import os
+import sys
 import logging
 import argparse
 import pickle
 from pathlib import Path
+
+import pandas as pd
+# import numpy as np
+from sklearn.model_selection import train_test_split
+# from sklearn.linear_model import LogisticRegression
+# from sklearn.metrics import roc_auc_score, make_scorer
+# from sklearn.preprocessing import OrdinalEncoder, StandardScaler
+# from sklearn.feature_extraction import DictVectorizer
+# from sklearn.ensemble import RandomForestClassifier
+
 
 import settings
 
@@ -41,7 +43,7 @@ def transform_data(df, oe, dv, is_ohe=False, is_train=False):
     if not is_ohe:
         cat_fields = settings.cat_fields
         if is_train:
-                df[cat_fields] = oe.fit_transform(df[cat_fields])
+            df[cat_fields] = oe.fit_transform(df[cat_fields])
         else:
             df[cat_fields] = oe.transform(df[cat_fields])
     dicts = df.to_dict(orient='records')
@@ -52,14 +54,14 @@ def transform_data(df, oe, dv, is_ohe=False, is_train=False):
     return df
 
 def data_prep(
-    df, 
-    oe,
-    dv,
-    is_ohe=False,
-    is_train=True,
-    is_test=False,
-    is_pred=False,
-    is_drop=True
+        df,
+        oe,
+        dv,
+        is_ohe=False,
+        is_train=True,
+        is_test=False,
+        is_pred=False,
+        is_drop=True
 ):
     """Prepare dataset"""
     # df = split_dataset(df)[split]
@@ -107,7 +109,7 @@ def preprocess_pipeline(df):
     logging.info("Split and prepare the train, validation and test sets")
     train = split_dataset(new_df)[0]
     train_x, train_y, dv, ohe = data_prep(
-        train, 
+        train,
         settings.oe,
         settings.dv,
         is_drop=False,
@@ -116,9 +118,9 @@ def preprocess_pipeline(df):
     )
     val = split_dataset(new_df)[1]
     val_x, val_y, _, _ = data_prep(
-        val, 
+        val,
         settings.oe,
-        settings.dv, 
+        settings.dv,
         is_train=False,
         is_drop=False,
         is_pred=False,
@@ -126,7 +128,7 @@ def preprocess_pipeline(df):
     )
     test = split_dataset(new_df)[2]
     test_x, test_y, _, _ = data_prep(
-        test,  
+        test,
         settings.oe,
         settings.dv,
         is_train=False,

@@ -1,15 +1,18 @@
-import pandas as pd
-import numpy as np
-import os, sys
-# import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score, StratifiedKFold
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_auc_score, make_scorer
-from sklearn.preprocessing import OrdinalEncoder, StandardScaler
-from sklearn.feature_extraction import DictVectorizer
-import time
 import argparse
 import logging
+import os
+import sys
+import pickle
+from pathlib import Path
+
+import pandas as pd
+# import numpy as np
+# import matplotlib.pyplot as plt
+from sklearn.model_selection import cross_val_score, StratifiedKFold
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import roc_auc_score
+# from sklearn.preprocessing import OrdinalEncoder
+# from sklearn.feature_extraction import DictVectorizer
 import mlflow
 from mlflow.tracking import MlflowClient
 from mlflow.entities import ViewType
@@ -18,10 +21,8 @@ from prefect.task_runners import SequentialTaskRunner
 # from dotenv import load_dotenv
 import optuna
 from optuna.samplers import TPESampler
-import settings
+# import settings
 import preprocess_data
-import pickle
-from pathlib import Path
 
 # load_dotenv(".env")
 
@@ -47,7 +48,7 @@ def load_pickle(filename):
         return pickle.load(f)
 
 @task()
-def train_model(train_X, train_y, valid_X, valid_y, 
+def train_model(train_X, train_y, valid_X, valid_y,
                 test_X, test_y,
                 cv=3, num_trials=3):
     """
@@ -75,7 +76,9 @@ def train_model(train_X, train_y, valid_X, valid_y,
             # print(f"ROC is {roc_auc}")
             mlflow.log_metric("roc_auc", roc_auc)
             # throws the following error inside docker container
-            # An error occurred (InvalidAccessKeyId) when calling the PutObject operation: The AWS Access Key Id you provided does not exist in our records.
+            # An error occurred (InvalidAccessKeyId) when calling the PutObject operation: 
+            # The AWS Access Key Id 
+            # you provided does not exist in our records.
             # mlflow.sklearn.log_model(lr, artifact_path="churn_predictor")
             skfold = StratifiedKFold(n_splits=cv)
             scores = cross_val_score(lr, valid_X, valid_y, cv=skfold, scoring='roc_auc_ovr_weighted')
@@ -157,11 +160,12 @@ def main():
         test_x, test_y = load_pickle('test.pkl')
     
     logger.info("Train the model")
-    train_model(train_x, train_y, 
-                        val_x, val_y,
-                        test_x, test_y,
-                        # scoring=make_scorer(roc_auc_scorer, needs_threshold=True), 
-                        cv=3, num_trials=10
+    train_model(
+        train_x, train_y,
+        val_x, val_y,
+        test_x, test_y, 
+        cv=3, num_trials=10,
+        # scoring=make_scorer(roc_auc_scorer, needs_threshold=True),
     )
     logger.info("Register model")
     register_model()

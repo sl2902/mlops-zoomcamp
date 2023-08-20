@@ -1,16 +1,18 @@
-import pandas as pd
-import numpy as np
-import os, sys
-from sklearn.preprocessing import OrdinalEncoder, StandardScaler
-from sklearn.feature_extraction import DictVectorizer
-import time
-import argparse
-import logging
-import mlflow
-from dotenv import load_dotenv
-import settings
-import preprocess_data
+import os
+import sys
 import pickle
+import logging
+# import time
+import argparse
+
+import pandas as pd
+# from sklearn.preprocessing import OrdinalEncoder
+# from sklearn.feature_extraction import DictVectorizer
+
+from dotenv import load_dotenv
+# import settings
+import preprocess_data
+
 
 load_dotenv()
 
