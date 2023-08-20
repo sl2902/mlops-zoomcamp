@@ -1,17 +1,23 @@
-import pandas as pd
-import numpy as np
-import os, sys
-import mlflow
-from flask import Flask, jsonify, request
-from mlflow.tracking import MlflowClient
+import os
+import sys
+sys.path.append("scripts")
 import pickle
 import requests
-import json
+
+import mlflow
 from pymongo import MongoClient
-from sklearn.metrics import roc_auc_score, make_scorer
-sys.path.append("scripts")
-import preprocess_data
+import pandas as pd
+from flask import Flask, jsonify, request
+
 import settings
+import preprocess_data
+
+# from .. import scripts
+# from scripts import settings
+# from scripts import preprocess_data
+
+# from mlflow.tracking import MlflowClient
+
 
 MONGODB_ADDRESS = os.getenv("MONGODB_ADDRESS", "mongodb://mongo:27017/")
 MLFLOW_TRACKING_URI = os.getenv(
@@ -27,8 +33,8 @@ MLFLOW_ENABLED = os.getenv("MLFLOW_ENABLED", "False") == "True"
 PICKLE_PATH = os.getenv("PICKLE_PATH", "pickle")
 EVIDENTLY_SERVICE_ADDRESS = os.getenv("EVIDENTLY_SERVICE", "127.0.0.1:8085")
 TEST = os.getenv("TEST", "True") == "True"
-MODEL_LOCATION = os.getenv('MODEL_LOCATION', "model/")
-print(f'test run value {TEST}')
+MODEL_LOCATION = os.getenv('MODEL_LOCATION', "./model/")
+print(f'model location {MODEL_LOCATION}')
 
 mongo_client = MongoClient(MONGODB_ADDRESS)
 db = mongo_client.get_database("prediction_service")
@@ -36,19 +42,10 @@ collection = db.get_collection("data")
 
 app = Flask('credit-card-churn-app')
 
-
 def load_pickle(filename):
     with open(filename, 'rb') as f:
         return pickle.load(f)
 
-try:
-    dv = load_pickle(f'{PICKLE_PATH}/dv.pkl')
-except FileNotFoundError:
-    dv = load_pickle('dv.pkl')
-try:
-    oe = load_pickle(f'{PICKLE_PATH}/ohe.pkl')
-except FileNotFoundError:
-    oe = load_pickle('ohe.pkl')
 
 def model_uri(stage, model_name):
     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
@@ -69,7 +66,15 @@ def load_model(stage, model_name):
         print('S3 model failed')
         return mlflow.sklearn.load_model(model_uri=MODEL_LOCATION)
 
-       
+
+try:
+    dv = load_pickle(f'{PICKLE_PATH}/dv.pkl')
+except FileNotFoundError:
+    dv = load_pickle('dv.pkl')
+try:
+    oe = load_pickle(f'{PICKLE_PATH}/ohe.pkl')
+except FileNotFoundError:
+    oe = load_pickle('ohe.pkl')    
         
 
 model = load_model(MODEL_STAGE, MLFLOW_MODEL_NAME)
@@ -78,13 +83,13 @@ model = load_model(MODEL_STAGE, MLFLOW_MODEL_NAME)
 def make_prediction():
     payload = request.get_json()
     payload, _, _ = preprocess_data.data_prep(
-                            pd.DataFrame(payload, index=[0]),  
-                            oe,
-                            dv,
-                            is_train=False,
-                            is_drop=False,
-                            is_ohe=False,
-                            is_pred=True
+        pd.DataFrame(payload, index=[0]),
+        oe,
+        dv,
+        is_train=False,
+        is_drop=False,
+        is_ohe=False,
+        is_pred=True
     )
     pred = model.predict_proba(payload)[:, 1]
     result = {
@@ -110,8 +115,5 @@ def send_to_evidently_service(payload, prediction):
     requests.post(f"{EVIDENTLY_SERVICE_ADDRESS}/iterate/churn", json=row)
 
 if __name__ == "__main__":
-    PORT = os.getenv("PORT", 9696)
+    PORT = os.getenv("PORT", "9696")
     app.run(debug=True, host='0.0.0.0', port=int(PORT))
-
-
-
