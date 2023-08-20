@@ -3,6 +3,9 @@ SHELL:=/bin/bash
 setup: ## Setup the development environment
 	@pipenv install --dev; pipenv run pre-commit install; pipenv shell
 
+build: ## Docker build and run the MLOps pipeline
+	@docker-compose up --build -d
+
 deployment: ## Deploy the scheduled training workflow
 	@docker exec -t prefect python s3_remote_storage.py
 	@docker exec -t prefect prefect deployment build ./train.py:main --name "Credit Churn Deployment" --tag credit-churn-experiment --cron "0 0 * * *" --storage-block remote-file-system/minio
@@ -23,6 +26,12 @@ restart: ## Restart MLOps pipeline environment
 
 kill: ## Kill MLOps pipeline environment
 	@docker-compose down
+
+clean: ## Clean environment
+	@docker container stop $(docker container ls -q)
+	@docker container prune
+	@docker rmi -f image $(docker image ls -q)
+	@docker-compose down -v
 
 unit_tests: ## Run the unit tests
 	@python -m pytest tests
