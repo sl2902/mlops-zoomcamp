@@ -14,11 +14,14 @@ boto3 = "*"
 psycopg2-binary = "*"
 prefect = "*"
 optuna = "*"
-mlflow = "==1.28.0"
-scikit-learn = "==1.1.2"
+mlflow = "*"
+scikit-learn = "*"
 
 [dev-packages]
 deepdiff = "*"
+pylint = "*"
+isort = "*"
+black = "*"
 
 [requires]
 python_version = "3.8"
