@@ -1,17 +1,15 @@
 import os
 import sys
 import pickle
-import argparse
 import logging
+import argparse
 from time import sleep
 
 import pandas as pd
 import requests
 
-sys.path.append("scripts")
-import preprocess_data
-import settings
-
+# sys.path.append("scripts")
+from scripts import settings, preprocess_data
 
 FORMAT = "%(asctime)s %(filename)s %(levelname)s %(message)s"
 logging.basicConfig(format=FORMAT, level=logging.INFO)

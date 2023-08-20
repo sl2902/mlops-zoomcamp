@@ -1,17 +1,15 @@
 import os
 import sys
-
 # sys.path.append("scripts")
 import pickle
-import requests
 
 import mlflow
-from pymongo import MongoClient
 import pandas as pd
+import requests
 from flask import Flask, jsonify, request
+from pymongo import MongoClient
 
-from scripts import settings
-from scripts import preprocess_data
+from scripts import settings, preprocess_data
 
 # from .. import scripts
 # from scripts import settings
