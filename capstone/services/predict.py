@@ -1,6 +1,7 @@
 import os
 import sys
-sys.path.append("scripts")
+
+# sys.path.append("scripts")
 import pickle
 import requests
 
@@ -9,8 +10,8 @@ from pymongo import MongoClient
 import pandas as pd
 from flask import Flask, jsonify, request
 
-import settings
-import preprocess_data
+from scripts import settings
+from scripts import preprocess_data
 
 # from .. import scripts
 # from scripts import settings
@@ -20,9 +21,7 @@ import preprocess_data
 
 
 MONGODB_ADDRESS = os.getenv("MONGODB_ADDRESS", "mongodb://mongo:27017/")
-MLFLOW_TRACKING_URI = os.getenv(
-    "MLFLOW_TRACKING_URI", "http://127.0.0.1:5000"
-)
+MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "http://127.0.0.1:5000")
 if MLFLOW_TRACKING_URI == "":
     MLFLOW_TRACKING_URI = "http://127.0.0.1:5000"
     print(f"Tracking URI {MLFLOW_TRACKING_URI}")
@@ -42,6 +41,7 @@ collection = db.get_collection("data")
 
 app = Flask('credit-card-churn-app')
 
+
 def load_pickle(filename):
     with open(filename, 'rb') as f:
         return pickle.load(f)
@@ -52,11 +52,11 @@ def model_uri(stage, model_name):
     if MLFLOW_ENABLED:
         print("S3 model used")
         return f"models:/{model_name}/{stage}"
-    
+
     if MODEL_LOCATION is not None:
         print('Local model used')
         return MODEL_LOCATION
-    
+
 
 def load_model(stage, model_name):
     uri = model_uri(stage, model_name)
@@ -74,10 +74,11 @@ except FileNotFoundError:
 try:
     oe = load_pickle(f'{PICKLE_PATH}/ohe.pkl')
 except FileNotFoundError:
-    oe = load_pickle('ohe.pkl')    
-        
+    oe = load_pickle('ohe.pkl')
+
 
 model = load_model(MODEL_STAGE, MLFLOW_MODEL_NAME)
+
 
 @app.route('/predict', methods=["POST"])
 def make_prediction():
@@ -89,12 +90,12 @@ def make_prediction():
         is_train=False,
         is_drop=False,
         is_ohe=False,
-        is_pred=True
+        is_pred=True,
     )
     pred = model.predict_proba(payload)[:, 1]
     result = {
         'is_churned': "Yes" if pred[0] > 0.5 else "No",
-        'model_version': f"{MLFLOW_MODEL_NAME}/{MODEL_STAGE}"
+        'model_version': f"{MLFLOW_MODEL_NAME}/{MODEL_STAGE}",
     }
     if not TEST:
         save_to_db(payload, pred[0])
@@ -102,10 +103,12 @@ def make_prediction():
 
     return jsonify(result)
 
+
 def save_to_db(payload, prediction):
     row = payload.to_dict(orient="records")
     row[0]['prediction'] = "Yes" if prediction > 0.5 else "No"
     collection.insert_one(row[0])
+
 
 def send_to_evidently_service(payload, prediction):
     payload = payload[settings.monitor].copy()
@@ -113,6 +116,7 @@ def send_to_evidently_service(payload, prediction):
     row[0]['prediction'] = 1 if prediction > 0.5 else 0
     # print(f'Evidently {row}')
     requests.post(f"{EVIDENTLY_SERVICE_ADDRESS}/iterate/churn", json=row)
+
 
 if __name__ == "__main__":
     PORT = os.getenv("PORT", "9696")
