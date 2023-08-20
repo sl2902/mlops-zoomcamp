@@ -9,10 +9,12 @@ function print_info {
     echo -e "$YELLOW$BOLD [+] $1 $RESET"
 }
 
+export MINIO_ROOT_USER=minioadmin
+export MINIO_ROOT_PASSWORD=minioadmin
 export AWS_REGION=eu-west-1
 export AWS_DEFAULT_REGION=eu-west-1
-export AWS_ACCESS_KEY_ID=minioadmin
-export AWS_SECRET_ACCESS_KEY=minioadmin
+export AWS_ACCESS_KEY_ID=In1IKgTRbO9U4yPK
+export AWS_SECRET_ACCESS_KEY=Ee2p53DTNVczXbZ62JLOBAzHAQ4cOnyY
 export POSTGRES_DB=mlflowdb
 export POSTGRES_USER=user
 export POSTGRES_PASSWORD=password
