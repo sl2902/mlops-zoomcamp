@@ -2,17 +2,18 @@ import os
 import sys
 import pickle
 import logging
+
 # import time
 import argparse
 
 import pandas as pd
+
 # import settings
 import preprocess_data
 from dotenv import load_dotenv
 
 # from sklearn.preprocessing import OrdinalEncoder
 # from sklearn.feature_extraction import DictVectorizer
-
 
 
 load_dotenv()
@@ -24,17 +25,20 @@ logging.basicConfig(format=FORMAT, level=logging.INFO, stream=sys.stdout)
 logger = logging.getLogger(__name__)
 PICKLE_PATH = os.getenv("PICKLE_PATH", "pickle")
 
+
 def load_pickle(filename):
     with open(filename, 'rb') as f:
         return pickle.load(f)
 
+
 def main():
     parser = argparse.ArgumentParser(description="Train best model")
     parser.add_argument(
-        "--file-path", "-f", 
+        "--file-path",
+        "-f",
         required=True,
-        help="Enter file path and name of file to train"
-        )
+        help="Enter file path and name of file to train",
+    )
     args = parser.parse_args()
     file_path = args.file_path
 
@@ -56,6 +60,7 @@ def main():
     df = preprocess_data.transform_data(df, oe, dv, is_ohe=False, is_train=False)
     df = pd.DataFrame(df, columns=dv.get_feature_names_out())
     df.to_csv("ref_data/reference_data.csv", index=False)
+
 
 if __name__ == "__main__":
     main()

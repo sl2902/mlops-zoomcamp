@@ -8,9 +8,11 @@ from pathlib import Path
 # from sklearn.preprocessing import OrdinalEncoder
 # from sklearn.feature_extraction import DictVectorizer
 import mlflow
+
 # from dotenv import load_dotenv
 import optuna
 import pandas as pd
+
 # import settings
 import preprocess_data
 from prefect import flow, task
@@ -20,6 +22,7 @@ from optuna.samplers import TPESampler
 from sklearn.metrics import roc_auc_score
 from prefect.task_runners import SequentialTaskRunner
 from sklearn.linear_model import LogisticRegression
+
 # import numpy as np
 # import matplotlib.pyplot as plt
 from sklearn.model_selection import StratifiedKFold, cross_val_score

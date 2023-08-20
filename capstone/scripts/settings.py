@@ -23,7 +23,7 @@ cols_to_keep = [
     "Months_on_book",
     "Total_Relationship_Count",
     "Credit_Limit",
-    "Total_Revolving_Bal"
+    "Total_Revolving_Bal",
 ]
 
 col_rename = {
@@ -39,7 +39,7 @@ col_rename = {
     "Months_on_book": "months_on_book",
     "Total_Relationship_Count": "total_relationship_count",
     "Credit_Limit": "credit_limit",
-    "Total_Revolving_Bal": "total_revolving_bal"
+    "Total_Revolving_Bal": "total_revolving_bal",
 }
 
 # cat fields
@@ -48,11 +48,11 @@ cat_fields = ["education_level", "marital_status", "income_category", "card_cate
 # subset of fields used for Evidently monitoring
 # check config.yaml in the monitoring directory
 monitor = [
-        'education_level',
-        'income_category',
-        'credit_limit',
-        'total_revolving_bal',
-        'customer_age'
+    'education_level',
+    'income_category',
+    'credit_limit',
+    'total_revolving_bal',
+    'customer_age',
 ]
 
 dv = DictVectorizer(sparse=False)
