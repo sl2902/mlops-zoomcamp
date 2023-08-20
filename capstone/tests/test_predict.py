@@ -1,7 +1,7 @@
 import json
 import sys
-sys.path.append("services")
-import predict
+# sys.path.append("services")
+from services import predict
 
 
 client = predict.app.test_client()

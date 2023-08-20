@@ -1,11 +1,11 @@
-import numpy as np
-import sys
 import os
-sys.path.append("scripts")
-# import settings
-import preprocess_data
-import pandas as pd
+import sys
 import pickle
+import numpy as np
+# sys.path.append("scripts")
+# import settings
+from scripts import preprocess_data
+import pandas as pd
 from deepdiff import DeepDiff
 pd.set_option('display.max_columns', None)
 
