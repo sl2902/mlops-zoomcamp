@@ -56,4 +56,5 @@ monitor = [
 ]
 
 dv = DictVectorizer(sparse=False)
-oe = OrdinalEncoder(encoded_missing_value=-1)
+# oe = OrdinalEncoder(encoded_missing_value=-1)
+oe = OrdinalEncoder()

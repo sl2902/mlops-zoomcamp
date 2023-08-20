@@ -6,11 +6,13 @@ import pickle
 from pathlib import Path
 
 import pandas as pd
+
 # import numpy as np
 # import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
+
 # from sklearn.preprocessing import OrdinalEncoder
 # from sklearn.feature_extraction import DictVectorizer
 import mlflow
@@ -18,9 +20,11 @@ from mlflow.tracking import MlflowClient
 from mlflow.entities import ViewType
 from prefect import flow, task
 from prefect.task_runners import SequentialTaskRunner
+
 # from dotenv import load_dotenv
 import optuna
 from optuna.samplers import TPESampler
+
 # import settings
 import preprocess_data
 
@@ -47,21 +51,21 @@ def load_pickle(filename):
     with open(filename, 'rb') as f:
         return pickle.load(f)
 
+
 @task()
-def train_model(train_X, train_y, valid_X, valid_y,
-                test_X, test_y,
-                cv=3, num_trials=3):
+def train_model(train_X, train_y, valid_X, valid_y, test_X, test_y, cv=3, num_trials=3):
     """
     Train and optimize model
     """
     # np.random.seed(42)
     # start_time = time.time()
     mlflow.sklearn.autolog()
+
     def objective(trial):
         params = {
             'solver': 'liblinear',
             'class_weight': 'balanced',
-            "C": trial.suggest_float('C', .01, .1, log=True),
+            "C": trial.suggest_float('C', 0.01, 0.1, log=True),
             'random_state': 42,
             # 'n_jobs': -1
         }
@@ -76,12 +80,14 @@ def train_model(train_X, train_y, valid_X, valid_y,
             # print(f"ROC is {roc_auc}")
             mlflow.log_metric("roc_auc", roc_auc)
             # throws the following error inside docker container
-            # An error occurred (InvalidAccessKeyId) when calling the PutObject operation: 
-            # The AWS Access Key Id 
+            # An error occurred (InvalidAccessKeyId) when calling the PutObject operation:
+            # The AWS Access Key Id
             # you provided does not exist in our records.
             # mlflow.sklearn.log_model(lr, artifact_path="churn_predictor")
             skfold = StratifiedKFold(n_splits=cv)
-            scores = cross_val_score(lr, valid_X, valid_y, cv=skfold, scoring='roc_auc_ovr_weighted')
+            scores = cross_val_score(
+                lr, valid_X, valid_y, cv=skfold, scoring='roc_auc_ovr_weighted'
+            )
             # print(f"weighted roc auc cross val score {scores.mean()}")
 
         return scores.mean()
@@ -89,7 +95,9 @@ def train_model(train_X, train_y, valid_X, valid_y,
     sampler = TPESampler(seed=42)
     study = optuna.create_study(direction="maximize", sampler=sampler)
     study.optimize(objective, n_trials=num_trials)
-    logger.info(f"Best score {study.best_value}. Best params {study.best_params}. Best trial {study.best_trial}")
+    logger.info(
+        f"Best score {study.best_value}. Best params {study.best_params}. Best trial {study.best_trial}"
+    )
     # best_trial = study.best_trial
     # params = study.best_params
     # best_lr = LogisticRegression(solver='liblinear', class_weight='balanced', **params)
@@ -102,7 +110,6 @@ def train_model(train_X, train_y, valid_X, valid_y,
 
 @task
 def register_model(metric='roc_auc', registered_model_name=EXPERIMENT_NAME):
-
     client = MlflowClient()
     # select the prediction_service with the lowest test log loss
     experiment = client.get_experiment_by_name(registered_model_name)
@@ -126,14 +133,16 @@ def register_model(metric='roc_auc', registered_model_name=EXPERIMENT_NAME):
         archive_existing_versions=True,
     )
 
+
 @flow(log_prints=True, task_runner=SequentialTaskRunner())
 def main():
     parser = argparse.ArgumentParser(description="Train best model")
     parser.add_argument(
-        "--file-path", "-f", 
+        "--file-path",
+        "-f",
         help="Enter file path and name of file to train",
-        default="data/BankChurnersSample.csv"
-        )
+        default="data/BankChurnersSample.csv",
+    )
     args = parser.parse_args()
     file_path = args.file_path
 
@@ -158,13 +167,17 @@ def main():
         test_x, test_y = load_pickle(f'{PICKLE_PATH}/test.pkl')
     except:
         test_x, test_y = load_pickle('test.pkl')
-    
+
     logger.info("Train the model")
     train_model(
-        train_x, train_y,
-        val_x, val_y,
-        test_x, test_y, 
-        cv=3, num_trials=10,
+        train_x,
+        train_y,
+        val_x,
+        val_y,
+        test_x,
+        test_y,
+        cv=3,
+        num_trials=10,
         # scoring=make_scorer(roc_auc_scorer, needs_threshold=True),
     )
     logger.info("Register model")
@@ -186,6 +199,7 @@ def main():
     #                     }
     #     }
     # )
+
 
 if __name__ == "__main__":
     main()

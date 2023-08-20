@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 # from sklearn.ensemble import RandomForestClassifier
 
 
-import settings
+from . import settings
 
 FORMAT = "%(asctime)s %(filename)s %(levelname)s %(message)s"
 logging.basicConfig(format=FORMAT, level=logging.INFO, stream=sys.stdout)
