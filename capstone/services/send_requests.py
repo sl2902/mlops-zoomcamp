@@ -8,8 +8,9 @@ from time import sleep
 import pandas as pd
 import requests
 
-# sys.path.append("scripts")
-from scripts import settings, preprocess_data
+sys.path.append("scripts")
+import settings
+import preprocess_data
 
 FORMAT = "%(asctime)s %(filename)s %(levelname)s %(message)s"
 logging.basicConfig(format=FORMAT, level=logging.INFO)

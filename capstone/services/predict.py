@@ -1,6 +1,6 @@
 import os
 import sys
-# sys.path.append("scripts")
+sys.path.append("scripts")
 import pickle
 
 import mlflow
@@ -9,11 +9,8 @@ import requests
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
 
-from scripts import settings, preprocess_data
-
-# from .. import scripts
-# from scripts import settings
-# from scripts import preprocess_data
+import settings
+import preprocess_data
 
 # from mlflow.tracking import MlflowClient
 
