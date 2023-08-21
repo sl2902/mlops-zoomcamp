@@ -28,8 +28,8 @@ stop: ## Stop MLOps pipeline environment
 	@docker-compose down
 
 clean: ## Clean environment
-	@docker container stop $(docker container ls -q)
-	@docker container prune
+	# @docker container stop $(docker container ls -q)
+	# @docker container prune
 	@docker rmi -f image $(docker image ls -q)
 	@docker-compose down -v
 
