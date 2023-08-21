@@ -24,7 +24,7 @@ post_request: ## Send requests to the server
 restart: ## Restart MLOps pipeline environment
 	@docker-compose restart
 
-kill: ## Kill MLOps pipeline environment
+stop: ## Stop MLOps pipeline environment
 	@docker-compose down
 
 clean: ## Clean environment
