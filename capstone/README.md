@@ -58,42 +58,48 @@ The MLOps pipeline is fully dockerised and can be easily deployed via the follow
 
 1. Clone the `capstone` repository locally:
 
-```
-git clone https://github.com/sl2902/mlops-zoomcamp.git
-```
-
-    1a. If you would like to only clone the `capstone` subdirectory, then run the following commands. Note: this requires git version >= 2.30.0
-
-```
-git clone --depth 1 --filter=blob:none --sparse https://github.com/sl2902/mlops-zoomcamp.git;
-cd mlops-zoomcamp;
-git sparse-checkout set capstone
-```
-
-2. Prepare your environment to run the pipeline:
-
-    ```bash
-    $ cd capstone
-    $ make setup
+    ```
+    git clone https://github.com/sl2902/mlops-zoomcamp.git
     ```
 
-3. Build and launch the MLOps pipeline:
+2. If you would like to only clone the `capstone` subdirectory, then run the following commands. Note: this requires git version >= 2.30.0
 
     ```
-    $ make build
+    git clone --depth 1 --filter=blob:none --sparse https://github.com/sl2902/mlops-zoomcamp.git;
+    cd mlops-zoomcamp;
+    git sparse-checkout set capstone
+    ```
+
+3. Prepare your environment to run the pipeline:
+
+    ```
+    cd capstone
+    make setup
+    ```
+
+4. Build and launch the MLOps pipeline:
+
+    ```
+    make build
     ```
     Once ready, the following containers will be available:
 
-|Names  			          |     Port|Description       						 |
-|-----------------------------|---------|---------------------------------------:|
-|app   						  |     9696|Web service api						 |
-|prefect					  |     4200|Training workflow orchestration		 |
-|capstone_evidently_service_1 |     8085|ML observability platform			     |
-|capstone_grafana_1			  |     3000|Dashboard							     |
-|mlflow_server				  |	    5000|Tracking server					     |
-|create_bucket       		  |        -|Command to create bucket				 |
-|minio						  |9000/9001|AWS S3 equivalent services				 |
-|capstone_prometheus_1		  |     9090|Database used with Evidently and Grafana|
-|mlflow_db  				  |     5432|Postgres database						 |
-|capstone_mongo_1             |    27018|Mongo database							 |
+    |Names  			          |     Port|Description       						 |
+    |-----------------------------|--------:|---------------------------------------:|
+    |app   						  |     9696|Web service api						 |
+    |prefect					  |     4200|Training workflow orchestration		 |
+    |capstone_evidently_service_1 |     8085|ML observability platform			     |
+    |capstone_grafana_1			  |     3000|Dashboard							     |
+    |mlflow_server				  |	    5000|Tracking server					     |
+    |create_bucket       		  |        -|Command to create bucket				 |
+    |minio						  |9000/9001|AWS S3 equivalent services				 |
+    |capstone_prometheus_1		  |     9090|Database used with Evidently and Grafana|
+    |mlflow_db  				  |     5432|Postgres database						 |
+    |capstone_mongo_1             |    27018|Mongo database							 |
+
+5. Send traffic to the app service
+
+    ```
+    make post_request
+    ```
 
