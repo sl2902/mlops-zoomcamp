@@ -62,7 +62,7 @@ The MLOps pipeline is fully dockerised and can be easily deployed via the follow
 git clone https://github.com/sl2902/mlops-zoomcamp.git
 ```
 
-- 1a. If you would like to only clone the `capstone` subdirectory, then run the following commands. Note: this requires git version >= 2.30.0
+    1a. If you would like to only clone the `capstone` subdirectory, then run the following commands. Note: this requires git version >= 2.30.0
 
 ```
 git clone --depth 1 --filter=blob:none --sparse https://github.com/sl2902/mlops-zoomcamp.git;
