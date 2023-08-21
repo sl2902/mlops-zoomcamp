@@ -52,7 +52,7 @@ the emphasis was less on feature engineering and hyperparameter tuning and more 
 
 <img src="artifacts/architecture.png" width="100%"/>
 
-### Deployment
+### Model serving
 
 The MLOps pipeline is fully dockerised and can be easily deployed via the following steps:
 
@@ -84,9 +84,9 @@ The MLOps pipeline is fully dockerised and can be easily deployed via the follow
     ```
     Once ready, the following containers will be available:
 
-    |Names  			          |     Port|Description       						 |
-    |-----------------------------|--------:|---------------------------------------:|
-    |app   						  |     9696|Web service api						 |
+    |Names  			          |     Port|Description       						  |
+    |-----------------------------|--------:|:----------------------------------------|
+    |app   						  |     9696|Web service api						  |
     |prefect					  |     4200|Training workflow orchestration		  |
     |capstone_evidently_service_1 |     8085|ML observability platform			      |
     |capstone_grafana_1			  |     3000|Dashboard							      |
@@ -152,6 +152,39 @@ Once done, you can shutdown the docker services
     ```
     make clean
     ```
+
+## Testing, Integration testing and Quality checks
+
+1. Run unit tests
+
+    ```
+    make unit_tests
+    ```
+    These test both the training data preparation pipeline and prediction pipeline
+
+2. Deploy integration tests
+
+    ```
+    make run_docker_integration
+    ```
+    This command starts the docker compose services inside the `integration_tests` folder
+
+3. Run integration tests
+
+    ```
+    run_integration_tests
+    ```
+    These will test both the training pipeline and the prediction services
+
+4. Run quality checks
+
+    ```
+    quality_checks
+    ```
+    Runs the `isort`, `black` and `pylint` on the `scripts` folder
+
+
+
 
 
     
