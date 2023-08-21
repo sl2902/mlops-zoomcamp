@@ -87,19 +87,76 @@ The MLOps pipeline is fully dockerised and can be easily deployed via the follow
     |Names  			          |     Port|Description       						 |
     |-----------------------------|--------:|---------------------------------------:|
     |app   						  |     9696|Web service api						 |
-    |prefect					  |     4200|Training workflow orchestration		 |
-    |capstone_evidently_service_1 |     8085|ML observability platform			     |
-    |capstone_grafana_1			  |     3000|Dashboard							     |
-    |mlflow_server				  |	    5000|Tracking server					     |
-    |create_bucket       		  |        -|Command to create bucket				 |
-    |minio						  |9000/9001|AWS S3 equivalent services				 |
-    |capstone_prometheus_1		  |     9090|Database used with Evidently and Grafana|
-    |mlflow_db  				  |     5432|Postgres database						 |
-    |capstone_mongo_1             |    27018|Mongo database							 |
+    |prefect					  |     4200|Training workflow orchestration		  |
+    |capstone_evidently_service_1 |     8085|ML observability platform			      |
+    |capstone_grafana_1			  |     3000|Dashboard							      |
+    |mlflow_server				  |	    5000|Tracking server					      |
+    |create_bucket       		  |        -|Command to create bucket				  |
+    |minio						  |9000/9001|Cloud object store compatible with AWS S3|
+    |capstone_prometheus_1		  |     9090|Database used with Evidently and Grafana |
+    |mlflow_db  				  |     5432|Postgres database						  |
+    |capstone_mongo_1             |    27018|Mongo database							  |
 
 5. Send traffic to the app service
 
     ```
     make post_request
     ```
+    This will used the model that has already been trained, and which is stored on disk
+
+6. Launch grafana at http://127.0.0.1:3000
+
+
+## Training and deployment
+
+1. To orchestrate the training workflow via Prefect, run the following command
+
+    ```
+    make deployment
+    ```
+    This will create a remote storage using Minio services, followed by deploying and applying the orchestration pipeline,
+    which is scheduled to run daily at midnight. The agent is started to pick up any queued jobs.
+
+2. Executes the training workflow, which includes reading a subset of the dataset stored in `data` folder, transforming the
+    required attributes, splitting the dataset into various susbets, pickling the prepared subsets, and carrying out experimenting
+    and tracking using mlflow to pick the model that has the highest auc roc; the models are persisted on Minio S3.
+
+    ```
+    make train
+
+    ```
+
+3.  Once ready, restart the docker service
+    ```
+    make restart
+    ```
+
+4.  Send traffic to the app service
+
+    ```
+    make post_request
+    ```
+
+## Shutdown
+
+Once done, you can shutdown the docker services
+
+1. Stop the running services
+
+    ```
+    make stop
+    ```
+
+2. Clean up the environment
+
+    ```
+    make clean
+    ```
+
+
+    
+
+
+
+
 
