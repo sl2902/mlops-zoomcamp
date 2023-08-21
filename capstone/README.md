@@ -85,7 +85,7 @@ git sparse-checkout set capstone
     Once ready, the following containers will be available:
 
 |Names  			          |     Port|Description       						 |
-----------------------------------------------------------------------------------
+--------------------------------------------------------------------------------:|
 |app   						  |     9696|Web service api						 |
 |prefect					  |     4200|Training workflow orchestration		 |
 |capstone_evidently_service_1 |     8085|ML observability platform			     |
