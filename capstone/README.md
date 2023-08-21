@@ -1,3 +1,5 @@
+New repo created for this to support pre commit hooks
+
 # Bank credit card churn prediction
 
 ## Introduction
@@ -50,7 +52,7 @@ the emphasis was less on feature engineering and hyperparameter tuning and more 
 
 ### Architecture
 
-<img src="artifacts/architecture.png" width="100%"/>
+<img src="assets/MLOps_architecture.drawio.png" width="100%"/>
 
 ### Model serving
 
